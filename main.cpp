@@ -1,8 +1,7 @@
-# ArgParse
- Simple arg parse for C++
- 
-```c++
 #include "argParse.h"
+
+using namespace std;
+
 
 int main(int argc, char* argv[]) {
     ArgParse ap(L"TEST ARG PARSE");
@@ -29,5 +28,3 @@ int main(int argc, char* argv[]) {
     ap.parse(argc, argv);
     return 0;
 }
-
-```
