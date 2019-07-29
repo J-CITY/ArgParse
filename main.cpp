@@ -1,6 +1,7 @@
 #include "argParse.h"
 
 using namespace std;
+using namespace ap;
 
 
 int main(int argc, char* argv[]) {

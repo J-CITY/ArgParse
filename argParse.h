@@ -5,6 +5,8 @@
 #include <functional>
 #include <map>
 
+namespace ap {
+
 enum class PayloadType {
     TYPE_WSTRING = 0,
     TYPE_INT,
@@ -131,4 +133,5 @@ public:
 private:
     std::wstring allDescription = L"";
 
+};
 };
