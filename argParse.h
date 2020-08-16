@@ -6,25 +6,29 @@
 #include <map>
 
 namespace ap {
-
 enum class PayloadType {
-    TYPE_WSTRING = 0,
+    NONE = 0,
+    TYPE_WSTRING = 1,
     TYPE_INT,
     TYPE_FLOAT,
     TYPE_BOOL
 };
 
 struct Payload {
+private:
+    PayloadType type = PayloadType::NONE;
+public:
     Payload() {}
     Payload(std::wstring wstrVal): wstrVal(wstrVal) {}
     Payload(int intVal) : intVal(intVal) {}
     Payload(float floatVal) : floatVal(floatVal) {}
     Payload(bool boolVal) : boolVal(boolVal) {}
+    PayloadType getType() {return type;}
 
-    void set(std::wstring wstrVal) { this->wstrVal = wstrVal; }
-    void set(int intVal) { this->intVal = intVal; }
-    void set(float floatVal) { this->floatVal = floatVal; }
-    void set(bool boolVal) { this->boolVal = boolVal; }
+    void set(std::wstring wstrVal) { this->wstrVal = wstrVal; type = PayloadType::TYPE_WSTRING; }
+    void set(int intVal) { this->intVal = intVal; type = PayloadType::TYPE_INT; }
+    void set(float floatVal) { this->floatVal = floatVal; type = PayloadType::TYPE_FLOAT; }
+    void set(bool boolVal) { this->boolVal = boolVal;  type = PayloadType::TYPE_BOOL; }
 
     int intVal = -1;
     std::wstring wstrVal = L"";
@@ -57,7 +61,7 @@ public:
         for (auto& k : keys) {
             argsMap[k] = fun;
             argsDataType[k] = dataType;
-            allDescription += k + L" ";
+            allDescription += k + L" - ";
             payloadMap[k] = p;
         }
 
