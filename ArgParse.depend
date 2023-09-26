@@ -1,8 +1,0 @@
-# depslib dependency file v1.0
-1564052522 source:c:\users\333da\desktop\argparse\main.cpp
-	<iostream>
-	<vector>
-	<memory>
-	<functional>
-	<map>
-
