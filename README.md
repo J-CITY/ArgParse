@@ -1,33 +1,95 @@
 # ArgParse
- Simple arg parse for C++
- 
+
+Simple arg parser for C++
+
+
+## Base example
 ```c++
 #include "argParse.h"
 
+using namespace std;
+using namespace ap;
+
 int main(int argc, char* argv[]) {
-    ArgParse ap(L"TEST ARG PARSE");
+	ArgParse ap("APP NAME", "APP DESCRIPTION");
 
-    ap.addArg(std::vector<std::wstring>{L"-i", L"--int"}, PayloadType::TYPE_INT, [&ap]() {
-        auto res = ap.payloadMap.find(L"--int");
-        cout << (*(*res).second).intVal;
-    }, new Payload(13), L"int val");
+	ap.addArg<int>({"-i", "--int"}, [](const auto& val) {
+		cout << val << endl;
+	}, 13, "int val");
+	ap.addArg<float>({"-f", "--float"}, [](const auto& val) {
+		cout << val << endl;
+	}, 0.0f, "float val");
+	ap.addArg<bool>({"-b", "--bool"}, [](const auto& val) {
+		cout << val << endl;
+	}, 0.0f, "bool val");
+	ap.addArg<std::string>({"-s"}, [](const auto& val) {
+		cout << val << endl;
+	}, "", "string val");
 
-    ap.addArg(std::vector<std::wstring>{L"-f", L"--float"}, PayloadType::TYPE_FLOAT, [&ap]() {
-        auto res = ap.payloadMap.find(L"--float");
-        cout << (*(*res).second).floatVal;
-    }, nullptr, L"float val");
-    ap.addArg(std::vector<std::wstring>{L"-b", L"--bool"}, PayloadType::TYPE_BOOL, [&ap]() {
-        auto res = ap.payloadMap.find(L"--bool");
-        cout << (*(*res).second).boolVal;
-    }, nullptr, L"bool val");
-
-    ap.addArg(std::vector<std::wstring>{L"-s", L"--str"}, PayloadType::TYPE_WSTRING, [&ap]() {
-        auto res = ap.payloadMap.find(L"--str");
-        wcout << (*(*res).second).wstrVal;
-    }, new Payload("!!!"), L"str val");
-
-    ap.parse(argc, argv);
-    return 0;
+	ap.parse(argc, argv);
+	return 0;
 }
+```
 
+## Parse argument by key
+```c++
+#include "argParse.h"
+
+using namespace std;
+using namespace ap;
+
+int main(int argc, char* argv[]) {
+	ArgParse ap("APP NAME", "APP DESCRIPTION", "APP EPILOG");
+	ap.addArg<int>({"-i", "--int"}, [](const auto& val) {
+		cout << val << endl;
+	}, 13, "int val");
+
+	// set 'false' flag for don`t call callbacks when args parse
+	ap.parse(argc, argv, false);
+	...
+	// get argument peyload by key
+	const auto& payload = ap.getPayload("-i");
+
+	// get argument payload type string by key
+	const auto& typeStr = ap.getPayloadTypeStr("-i");
+
+	// run argument callback by key
+	ap.run("-i");
+
+	return 0;
+}
+```
+
+
+## Other features
+```c++
+#include "argParse.h"
+
+using namespace std;
+using namespace ap;
+
+int main(int argc, char* argv[]) {
+	ArgParse ap("APP NAME", "APP DESCRIPTION", "APP EPILOG");
+	ap.addArg<int>({"-i", "--int"}, [](const auto& val) {
+		cout << val << endl;
+	}, 13, "int val");
+
+	// set custom print app information, when call with '-h' or '--help' argument 
+	setCustomHelpPrinter([](const std::string& data, const std::string& epilog) {
+		std::cout << data << "\n\n" << epilog << std::endl;
+	});
+
+	// set custom type for parse
+	addTypeParser<std::vector<int>>([](
+		const ArgStr& cmd, 
+		std::map<ArgStr, PayloadPtr>& payloadMap, 
+		int&i, int argc, char* argv[])\
+	{
+		// some code
+	});
+
+	ap.parse(argc, argv, );
+
+	return 0;
+}
 ```
