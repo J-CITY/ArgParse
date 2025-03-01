@@ -1,31 +1,24 @@
-#include "argParse.h"
+﻿#include "argParse.h"
 
 using namespace std;
 using namespace ap;
 
-
 int main(int argc, char* argv[]) {
-    ArgParse ap(L"TEST ARG PARSE");
+	ArgParse ap("APP NAME", "APP DESCRIPTION");
 
-    ap.addArg(std::vector<std::wstring>{L"-i", L"--int"}, PayloadType::TYPE_INT, [&ap]() {
-        auto res = ap.getPayload(L"--int");
-        cout << std::get<int>(res.value());
-    }, 13, L"int val");
+	ap.addArg<int>({"-i", "--int"}, [](const auto& val) {
+		cout << val << endl;
+	}, 13, "int val");
+	ap.addArg<float>({"-f", "--float"}, [](const auto& val) {
+		cout << val << endl;
+	}, 0.0f, "float val");
+	ap.addArg<bool>({"-b", "--bool"}, [](const auto& val) {
+		cout << val << endl;
+	}, 0.0f, "bool val");
+	ap.addArg<std::string>({"-s"}, [](const auto& val) {
+		cout << val << endl;
+	}, "", "string val");
 
-    ap.addArg(std::vector<std::wstring>{L"-f", L"--float"}, PayloadType::TYPE_FLOAT, [&ap]() {
-        auto res = ap.getPayload(L"--float");
-        cout << std::get<float>(res.value());
-        }, None{}, L"float val");
-    ap.addArg(std::vector<std::wstring>{L"-b", L"--bool"}, PayloadType::TYPE_BOOL, [&ap]() {
-        auto res = ap.getPayload(L"--bool");
-        cout << std::get<bool>(res.value());
-    }, None{}, L"bool val");
-
-    ap.addArg(std::vector<std::wstring>{L"-s", L"--str"}, PayloadType::TYPE_WSTRING, [&ap]() {
-        auto res = ap.getPayload(L"--str");
-        wcout << std::get<std::wstring>(res.value());
-    }, L"!!!", L"str val");
-
-    ap.parse(argc, argv);
-    return 0;
+	ap.parse(argc, argv);
+	return 0;
 }
