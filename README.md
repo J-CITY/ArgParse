@@ -75,12 +75,12 @@ int main(int argc, char* argv[]) {
 	}, 13, "int val");
 
 	// set custom print app information, when call with '-h' or '--help' argument 
-	setCustomHelpPrinter([](const std::string& data, const std::string& epilog) {
+	ap.setCustomHelpPrinter([](const std::string& data, const std::string& epilog) {
 		std::cout << data << "\n\n" << epilog << std::endl;
 	});
 
 	// set custom type for parse
-	addTypeParser<std::vector<int>>([](
+	ap.addTypeParser<std::vector<int>>([](
 		const ArgStr& cmd, 
 		std::map<ArgStr, PayloadPtr>& payloadMap, 
 		int&i, int argc, char* argv[])\
